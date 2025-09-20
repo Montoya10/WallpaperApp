@@ -1,13 +1,49 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>register</ion-title>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">register</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <ion-card>
+    <ion-card-content>
+      <ion-grid>
+        <ion-row>
+          <ion-col>
+            <app-input label="Name" placeholder="Enter your name" type="text">
+            </app-input>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <app-input
+              label="Last Name"
+              placeholder="Enter your last name"
+              type="text"
+            >
+            </app-input>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <app-input
+              label="Password"
+              placeholder="Enter your password"
+              type="text"
+            >
+            </app-input>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <app-input
+              label="Confirm Password"
+              placeholder="Re-enter your password"
+              type="text"
+            >
+            </app-input>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <app-radio justify="start" languajes> </app-radio>
+        </ion-row>
+
+        <app-button>Register</app-button>
+      </ion-grid>
+    </ion-card-content>
+  </ion-card>
 </ion-content>
