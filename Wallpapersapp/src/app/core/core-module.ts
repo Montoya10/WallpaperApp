@@ -5,7 +5,7 @@ import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { provideAuth, getAuth } from '@angular/fire/auth';
 
 import { environment } from 'src/environments/environment.prod';
-import { Auth } from 'src/app/core/providers/auth/auth';
+import { Auth } from 'src/app/core/services/auth/auth';
 
 
 @NgModule({

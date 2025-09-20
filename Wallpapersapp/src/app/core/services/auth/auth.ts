@@ -3,6 +3,7 @@ import {
   Auth as AuthFirebase,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  signOut,
 } from '@angular/fire/auth';
 
 @Injectable({
@@ -35,5 +36,12 @@ export class Auth {
             console.log((error as any).message);
     }
   }
+
+  //async
+async logOut(){
+
+  await signOut(this.afb)
+}
+
   //login with google
 }

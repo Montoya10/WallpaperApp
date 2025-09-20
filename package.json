@@ -3,6 +3,7 @@
     "@angular/cli": "20.3.2"
   },
   "dependencies": {
+    "@capacitor/toast": "^7.0.2",
     "firebase": "^12.3.0"
   }
 }

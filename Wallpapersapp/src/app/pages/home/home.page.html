@@ -1,1 +1,18 @@
-<ion-content [fullscreen]="true"> </ion-content>
+<ion-content [fullscreen]="true">
+  <ion-card>
+    <ion-card-content>
+      <ion-grid>
+        <ion-row>
+          <ion-col> 
+            <app-button
+                value="LogOut"
+                type="button"
+                (click)="doLogOut()"
+                fill="clear"
+              ></app-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

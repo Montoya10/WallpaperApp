@@ -3,7 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { AlertController } from '@ionic/angular';
 import { Router } from '@angular/router';
-import { Auth } from 'src/app/core/providers/auth/auth';
+import { Auth } from 'src/app/core/services/auth/auth';
 
 @Component({
   selector: 'app-login',
