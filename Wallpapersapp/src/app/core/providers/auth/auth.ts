@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {
   Auth as AuthFirebase,
   createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
 } from '@angular/fire/auth';
 
 @Injectable({
@@ -26,5 +27,13 @@ export class Auth {
 
   //login
 
+  async login(email: string, password: string) {
+    try {
+      const resp = await signInWithEmailAndPassword(this.afb, email, password)
+      console.log(resp)
+    } catch (error) {
+            console.log((error as any).message);
+    }
+  }
   //login with google
 }

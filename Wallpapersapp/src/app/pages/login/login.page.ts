@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
-import { AlertController } from '@ionic/angular'; 
+import { AlertController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { Auth } from 'src/app/core/providers/auth/auth';
-
 
 @Component({
   selector: 'app-login',
@@ -13,49 +12,37 @@ import { Auth } from 'src/app/core/providers/auth/auth';
   standalone: false,
 })
 export class LoginPage implements OnInit {
-  public name!: FormControl;
+  public email!: FormControl;
   public password!: FormControl;
   public loginForm!: FormGroup;
 
   constructor(
-    
-    private alertController: AlertController ,
-    private readonly authSrv: Auth,
-     
-
+    private alertController: AlertController,
+    private readonly router: Router,
+    private readonly authSrv: Auth
   ) {
     this.initForm();
   }
 
   ngOnInit() {}
 
-public goToRegister() {
-  console.log('Go to register page');
-}
-
-public doLogin() {
-  console.log(this.loginForm.value);} 
-
- 
-
-  private initForm() {
-    
-    this.name = new FormControl('', [Validators.required]);
-    this.password = new FormControl('', [
-      Validators.required,
-      Validators.minLength(4),
-    ]);
-
-    this.loginForm = new FormGroup({
-      name: this.name,
-      password: this.password,
-      
-    });
-
-    
-
-    
+  public goToRegister() {
+    console.log('Go to register page');
+    this.router.navigate(['/register']);
   }
 
-  
+  public async doLogin() {
+    await this.authSrv.login(this.email.value, this.password.value);
+    this.router.navigate(['/home']);
+  }
+
+  private initForm() {
+    this.email = new FormControl('', [Validators.required]);
+    this.password = new FormControl('', [Validators.required]);
+
+    this.loginForm = new FormGroup({
+      email: this.email,
+      password: this.password,
+    });
+  }
 }

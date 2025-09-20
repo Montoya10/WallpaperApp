@@ -30,7 +30,7 @@ export class RegisterPage implements OnInit {
   }
 
   public async doRegister() {
-    console.log(this.registerForm.value);
+    
     await this.authSrv.register(this.email.value, this.password.value) 
    
   }
@@ -58,6 +58,7 @@ export class RegisterPage implements OnInit {
 
   public goToLogin() {
     console.log('go to login');
+    this.router.navigate(['/login'])
   }
 
 
