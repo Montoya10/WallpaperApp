@@ -1,49 +1,79 @@
 <ion-content [fullscreen]="true">
-  <ion-card>
-    <ion-card-content>
-      <ion-grid>
-        <ion-row>
-          <ion-col>
-            <app-input label="Name" placeholder="Enter your name" type="text">
-            </app-input>
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col>
-            <app-input
-              label="Last Name"
-              placeholder="Enter your last name"
-              type="text"
-            >
-            </app-input>
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col>
-            <app-input
-              label="Password"
-              placeholder="Enter your password"
-              type="text"
-            >
-            </app-input>
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col>
-            <app-input
-              label="Confirm Password"
-              placeholder="Re-enter your password"
-              type="text"
-            >
-            </app-input>
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <app-radio justify="start" languajes> </app-radio>
-        </ion-row>
+  <form [formGroup]="registerForm" (ngSubmit)="doRegister()">
+    <ion-card>
+      <ion-card-content>
+        <ion-grid>
+          <ion-row>
+            <ion-col>
+              <app-input
+                label="Name"
+                placeholder="Enter your name"
+                type="text"
+                [control]="name"
+              >
+              </app-input>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <app-input
+                label="Last Name"
+                placeholder="Enter your last name"
+                type="text"
+                [control]="lastName"
+              >
+              </app-input>
+            </ion-col>
+          </ion-row>
 
-        <app-button>Register</app-button>
-      </ion-grid>
-    </ion-card-content>
-  </ion-card>
+          <ion-row>
+            <ion-col>
+              <app-input
+                label="Email"
+                placeholder="Enter your email"
+                type="text"
+                [control]="email"
+              >
+              </app-input>
+            </ion-col>
+          </ion-row>
+
+          <ion-row>
+            <ion-col>
+              <app-input
+                label="Password"
+                placeholder="Enter your password"
+                type="password"
+                [control]="password"
+              >
+              </app-input>
+            </ion-col>
+          </ion-row>
+
+          <ion-row>
+            <app-radio
+              label="Languaje"
+              justify="start"
+              languajes
+              placeholder="Choose Languaje"
+              type="text"
+            >
+            </app-radio>
+          </ion-row>
+
+          <app-button
+            value="Registrarse"
+            type="submit"
+            [disabled]="registerForm.invalid"
+          ></app-button>
+          <app-button
+            value="Iniciar Sesión"
+            type="button"
+            fill="clear"
+            (click)="goToLogin()"
+          ></app-button>
+        </ion-grid>
+      </ion-card-content>
+    </ion-card>
+  </form>
 </ion-content>

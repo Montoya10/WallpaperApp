@@ -1,36 +1,53 @@
 <ion-content [fullscreen]="true">
-  <ion-card>
-    <ion-card-content>
-      <ion-grid>
-        <ion-row>
-          <ion-col>
-          <app-input label="Name" placeholder="Enter your name" type="text">
-            
-          </app-input>
-          </ion-col>
-        </ion-row>
-            <ion-row>
-          <ion-col>
-          <app-input label="Last Name" placeholder="Enter your name" type="text">
-            
-          </app-input>
-          </ion-col>
-        </ion-row>
-            <ion-row>
-          <ion-col>
-          <app-input label="Password" placeholder="Enter your name" type="text">
-            
-          </app-input>
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <app-radio justify="start" languajes>
-            
-          </app-radio>
-        </ion-row>
+  <form [formGroup]="loginForm" (ngSubmit)="doLogin()">
+    <ion-card>
+      <ion-card-content>
+        <ion-grid>
+          <ion-row>
+            <ion-col>
+              <app-input
+                label="Name"
+                placeholder="Enter your name"
+                type="text"
+                [control]="name"
+              >
+              </app-input>
+            </ion-col>
+          </ion-row>
 
-      </ion-grid>
-      
-    </ion-card-content>
-  </ion-card>
+          <ion-row>
+            <ion-col>
+              <app-input
+                label="Password"
+                placeholder="Enter your name"
+                type="password"
+                [control]="password"
+              >
+              </app-input>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <app-button
+                value="Login"
+                type="submit"
+                [disabled]="loginForm.invalid"
+              ></app-button>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <app-button
+                value="Go to register"
+                type="button"
+                (click)="goToRegister()"
+                fill="clear"
+                
+              ></app-button>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card-content>
+    </ion-card>
+  </form>
 </ion-content>
