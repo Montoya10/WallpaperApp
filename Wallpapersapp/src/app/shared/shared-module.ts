@@ -9,16 +9,26 @@ import { RadioComponent } from './components/radio/radio.component';
 import { CardComponent } from './components/card/card.component';
 import { ButtonComponent } from './components/button/button.component';
 import { LinkComponent } from './components/link/link.component';
-import { AddbuttonComponent } from './components/addbutton/addbutton.component';
+import { AddButtonComponent } from './components/addbutton/addbutton.component';
 
 
-
- 
 @NgModule({
-  declarations: [InputComponent, RadioComponent, CardComponent, ButtonComponent, LinkComponent, AddbuttonComponent],
-  imports: [
-    CommonModule, IonicModule
+  declarations: [
+    InputComponent,
+    RadioComponent,
+    CardComponent,
+    ButtonComponent,
+    LinkComponent,
+    AddButtonComponent,
   ],
-  exports: [InputComponent, RadioComponent, CardComponent, ButtonComponent, LinkComponent, AddbuttonComponent]
+  imports: [CommonModule, IonicModule],
+  exports: [
+    InputComponent,
+    RadioComponent,
+    CardComponent,
+    ButtonComponent,
+    LinkComponent,
+    AddButtonComponent,
+  ],
 })
-export class SharedModule { }
+export class SharedModule {}

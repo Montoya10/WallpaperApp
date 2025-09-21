@@ -3,6 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Auth } from 'src/app/core/services/auth/auth';
 import { ErrorHandler } from 'src/app/core/services/error-handler/error-handler';
+import { Query } from 'src/app/core/providers/query/query';
 
 @Component({
   selector: 'app-register',
@@ -21,22 +22,42 @@ export class RegisterPage implements OnInit {
   constructor(
     private readonly authSrv: Auth,
     private router: Router,
-    private errorHandler: ErrorHandler
+    private errorHandler: ErrorHandler,
+    private readonly querySrv: Query
   ) {
     this.initForm();
   }
 
   public async doRegister() {
     if (this.registerForm.invalid) {
-      this.errorHandler.showWarning('Por favor, completa todos los campos correctamente');
+      this.errorHandler.showWarning(
+        'Por favor, completa todos los campos correctamente'
+      );
       return;
     }
 
     this.isLoading = true;
-    
+
     try {
-      await this.authSrv.register(this.email.value, this.password.value);
-      this.errorHandler.showSuccess('¡Cuenta creada! Ahora puedes iniciar sesión');
+      const uid = await this.authSrv.register(
+        this.email.value,
+        this.password.value
+      );
+      await this.querySrv.create(
+        'users',
+         {
+        name: this.name.value,
+        last: this.lastName.value,
+        email: this.email.value,
+      },
+    uid
+  );
+
+      console.log('Finish register');
+
+      this.errorHandler.showSuccess(
+        '¡Cuenta creada! Ahora puedes iniciar sesión'
+      );
       this.router.navigate(['/login']);
     } catch (error) {
       this.errorHandler.handleFirebaseError(error, 'register');

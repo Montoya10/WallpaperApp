@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Query } from 'src/app/core/providers/query/query';
 import { Auth } from 'src/app/core/services/auth/auth';
 import { ErrorHandler } from 'src/app/core/services/error-handler/error-handler';
 
@@ -19,7 +20,8 @@ export class LoginPage implements OnInit {
   constructor(
     private readonly router: Router,
     private readonly authSrv: Auth,
-    private errorHandler: ErrorHandler
+    private errorHandler: ErrorHandler,
+    private readonly querySrv: Query,
   ) {
     this.initForm();
   }
@@ -35,9 +37,7 @@ export class LoginPage implements OnInit {
       this.errorHandler.showWarning('Por favor, completa todos los campos correctamente');
       return;
     }
-
     this.isLoading = true;
-    
     try {
       await this.authSrv.login(this.email.value, this.password.value);
       this.errorHandler.showSuccess('¡Bienvenido! Sesión iniciada correctamente');

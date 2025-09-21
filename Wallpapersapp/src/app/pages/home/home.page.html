@@ -3,16 +3,19 @@
     <ion-card-content>
       <ion-grid>
         <ion-row>
-          <ion-col> 
-            <app-button
-                value="LogOut"
-                type="button"
-                (click)="doLogOut()"
-                fill="clear"
-              ></app-button>
+          <ion-col>
+
           </ion-col>
         </ion-row>
       </ion-grid>
     </ion-card-content>
   </ion-card>
+   <app-add-button
+    [showLogout]="true"
+    [showAdd]="true"
+    [showUpdateUser]="true"
+    (onLogout)="doLogout()"
+    (onAdd)="agregar()"
+    (onUpdateUser)="navigateToUpdateUser()">
+  </app-add-button>
 </ion-content>

@@ -15,7 +15,7 @@ export class Auth {
   constructor(private readonly afb: AuthFirebase) {}
 
   //register
-  async register(email: string, password: string) {
+  async register(email: string, password: string): Promise<string> {
     try {
       const response = await createUserWithEmailAndPassword(
         this.afb,
@@ -23,6 +23,7 @@ export class Auth {
         password
       );
       console.log(response);
+      return response.user.uid;
     } catch (error) {
       console.log((error as any).message);
       throw error;
