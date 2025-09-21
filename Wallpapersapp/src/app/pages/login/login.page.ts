@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-
-import { AlertController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { Auth } from 'src/app/core/services/auth/auth';
+import { ErrorHandler } from 'src/app/core/services/error-handler/error-handler';
 
 @Component({
   selector: 'app-login',
@@ -15,11 +14,12 @@ export class LoginPage implements OnInit {
   public email!: FormControl;
   public password!: FormControl;
   public loginForm!: FormGroup;
+  public isLoading: boolean = false;
 
   constructor(
-    private alertController: AlertController,
     private readonly router: Router,
-    private readonly authSrv: Auth
+    private readonly authSrv: Auth,
+    private errorHandler: ErrorHandler
   ) {
     this.initForm();
   }
@@ -27,18 +27,48 @@ export class LoginPage implements OnInit {
   ngOnInit() {}
 
   public goToRegister() {
-    console.log('Go to register page');
     this.router.navigate(['/register']);
   }
 
   public async doLogin() {
-    await this.authSrv.login(this.email.value, this.password.value);
-    this.router.navigate(['/home']);
+    if (this.loginForm.invalid) {
+      this.errorHandler.showWarning('Por favor, completa todos los campos correctamente');
+      return;
+    }
+
+    this.isLoading = true;
+    
+    try {
+      await this.authSrv.login(this.email.value, this.password.value);
+      this.errorHandler.showSuccess('¡Bienvenido! Sesión iniciada correctamente');
+      this.router.navigate(['/home']);
+    } catch (error) {
+      this.errorHandler.handleFirebaseError(error, 'login');
+    } finally {
+      this.isLoading = false;
+    }
+  }
+
+  public async doLoginWithGoogle() {
+    this.isLoading = true;
+    
+    try {
+      await this.authSrv.loginWithGoogle();
+      this.errorHandler.showSuccess('¡Bienvenido! Sesión con Google iniciada correctamente');
+      this.router.navigate(['/home']);
+    } catch (error) {
+      this.errorHandler.handleFirebaseError(error, 'google');
+    } finally {
+      this.isLoading = false;
+    }
   }
 
   private initForm() {
-    this.email = new FormControl('', [Validators.required]);
-    this.password = new FormControl('', [Validators.required]);
+    this.email = new FormControl('', [Validators.required, Validators.email]);
+    this.password = new FormControl('', [
+      Validators.required,
+      Validators.minLength(6),
+    ]);
 
     this.loginForm = new FormGroup({
       email: this.email,

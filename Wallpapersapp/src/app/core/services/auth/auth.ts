@@ -4,6 +4,8 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
+  signInWithPopup,
+  GoogleAuthProvider,
 } from '@angular/fire/auth';
 
 @Injectable({
@@ -23,6 +25,7 @@ export class Auth {
       console.log(response);
     } catch (error) {
       console.log((error as any).message);
+      throw error;
     }
   }
 
@@ -30,18 +33,29 @@ export class Auth {
 
   async login(email: string, password: string) {
     try {
-      const resp = await signInWithEmailAndPassword(this.afb, email, password)
-      console.log(resp)
+      const resp = await signInWithEmailAndPassword(this.afb, email, password);
+      console.log(resp);
+      
     } catch (error) {
-            console.log((error as any).message);
+      console.log((error as any).message);
+      throw error;
     }
   }
 
-  //async
-async logOut(){
-
-  await signOut(this.afb)
-}
+  //logout
+  async logOut() {
+    await signOut(this.afb);
+  }
 
   //login with google
+
+  async loginWithGoogle() {
+    try {
+      const googleProvider = new GoogleAuthProvider();
+      const response = await signInWithPopup(this.afb, googleProvider);
+    } catch (error) {
+      console.log((error as any).message);
+      throw error;
+    }
+  }
 }

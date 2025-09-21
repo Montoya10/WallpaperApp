@@ -1,12 +1,9 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { provideAuth, getAuth } from '@angular/fire/auth';
-
 import { environment } from 'src/environments/environment.prod';
-import { Auth } from 'src/app/core/services/auth/auth';
-
+import { ErrorHandler } from './services/error-handler/error-handler';
 
 @NgModule({
   declarations: [],
@@ -14,7 +11,7 @@ import { Auth } from 'src/app/core/services/auth/auth';
   providers: [
     provideFirebaseApp(() => initializeApp(environment.FIREBASE_APP)),
     provideAuth(() => getAuth()),
-    Auth,
+    ErrorHandler,
   ],
 })
 export class CoreModule {}
