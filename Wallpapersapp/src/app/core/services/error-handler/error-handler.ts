@@ -1,7 +1,6 @@
-import { Toast } from 'src/app/core/services/toast/toast';
 // error-handler.ts
 import { Injectable } from '@angular/core';
-
+import { Toast } from 'src/app/core/services/toast/toast';
 
 @Injectable({
   providedIn: 'root'
@@ -9,32 +8,33 @@ import { Injectable } from '@angular/core';
 export class ErrorHandler {
   
   private firebaseErrorMessages: { [key: string]: string } = {
-    // Errores de registro
+    
     'auth/email-already-in-use': 'El correo electrónico ya está registrado',
     'auth/invalid-email': 'El formato del correo electrónico no es válido',
     'auth/operation-not-allowed': 'La operación no está permitida',
     'auth/weak-password': 'La contraseña debe tener al menos 6 caracteres',
     
-    // Errores de login
+    
     'auth/user-disabled': 'Esta cuenta ha sido deshabilitada',
     'auth/user-not-found': 'No existe una cuenta con este correo electrónico',
     'auth/wrong-password': 'Contraseña incorrecta',
     'auth/invalid-credential': 'Credenciales inválidas',
     
-    // Errores generales
+    
     'auth/too-many-requests': 'Demasiados intentos fallidos. Intenta más tarde',
     'auth/network-request-failed': 'Error de conexión. Verifica tu internet',
     'auth/popup-closed-by-user': 'El popup de Google fue cerrado',
     'auth/popup-blocked': 'El popup de Google fue bloqueado',
     'auth/cancelled-popup-request': 'Solicitud de popup cancelada',
     
-    // Errores de Google Sign-In
+    
     'auth/account-exists-with-different-credential': 'Ya existe una cuenta con el mismo email pero diferente método de autenticación',
   };
 
   constructor(private toast: Toast) {}
 
-  handleFirebaseError(error: any, context: 'register' | 'login' | 'google' = 'login') {
+  
+  handleFirebaseError(error: any, context: FirebaseContext = 'general') {
     const errorCode = error.code || 'unknown';
     const errorMessage = this.getFirebaseErrorMessage(errorCode, context);
     
@@ -42,19 +42,23 @@ export class ErrorHandler {
     console.error('Firebase Error:', errorCode, error.message);
   }
 
-  private getFirebaseErrorMessage(errorCode: string, context: string): string {
+  private getFirebaseErrorMessage(errorCode: string, context: FirebaseContext): string {
     if (this.firebaseErrorMessages[errorCode]) {
       return this.firebaseErrorMessages[errorCode];
     }
 
-    // Mensajes por defecto según el contexto
-    const defaultMessages = {
+
+    const defaultMessages: Record<FirebaseContext, string> = {
       register: 'Error al registrar la cuenta',
       login: 'Error al iniciar sesión',
-      google: 'Error al iniciar sesión con Google'
+      google: 'Error al iniciar sesión con Google',
+      'cargar perfil': 'Error al cargar el perfil',
+      'actualizar perfil': 'Error al actualizar el perfil',
+      'cerrar sesión': 'Error al cerrar sesión',
+      general: 'Error desconocido'
     };
 
-    return defaultMessages[context as keyof typeof defaultMessages] || 'Error desconocido';
+    return defaultMessages[context] || defaultMessages.general;
   }
 
   showSuccess(message: string) {
@@ -69,3 +73,13 @@ export class ErrorHandler {
     this.toast.showInfo(message);
   }
 }
+
+
+type FirebaseContext = 
+  | 'register' 
+  | 'login' 
+  | 'google' 
+  | 'cargar perfil' 
+  | 'actualizar perfil' 
+  | 'cerrar sesión'
+  | 'general';

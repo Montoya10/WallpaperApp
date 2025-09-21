@@ -1,7 +1,9 @@
+
 import { Component, Input, OnInit } from '@angular/core';
 
 type ButtonType = 'button' | 'submit';
 type ButtonFill = 'solid' | 'outline' | 'clear';
+type ButtonColor = 'primary' | 'secondary' | 'success' | 'warning' | 'danger' | 'light' | 'medium' | 'dark';
 
 @Component({
   selector: 'app-button',
@@ -14,7 +16,7 @@ export class ButtonComponent implements OnInit {
   @Input() type: ButtonType = 'button';
   @Input() disabled: boolean = false;
   @Input() fill: ButtonFill = 'solid';
-
+  @Input() color: ButtonColor = 'primary'; 
 
   constructor() {}
 

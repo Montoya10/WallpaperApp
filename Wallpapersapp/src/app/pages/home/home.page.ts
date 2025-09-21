@@ -18,10 +18,6 @@ export class HomePage {
 
   ngOnInit() {}
 
-  async doLogOut() {
-    await this.authSrv.logOut();
-    this.router.navigate(['/login']);
-  }
 
   async doLogout() {
     console.log('Logout clicked');

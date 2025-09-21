@@ -1,13 +1,110 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>updateuser</ion-title>
+    <ion-buttons slot="start">
+      <app-back-button
+        [defaultBack]="'/tabs'"
+        [color]="'primary'"
+        [fill]="'clear'"
+        [icon]="'arrow-back'"
+      >
+      </app-back-button>
+    </ion-buttons>
+     <ion-title>{{ fullName }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="logout()">
+        <ion-icon name="log-out-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">updateuser</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content class="ion-padding">
+  <div class="profile-container">
+    
+    <div class="profile-header" *ngIf="userPhoto">
+      <ion-avatar class="profile-avatar">
+        <img [src]="userPhoto" alt="Foto de perfil">
+      </ion-avatar>
+      <ion-badge *ngIf="isGoogleUser" color="primary">
+        <ion-icon name="logo-google"></ion-icon>
+        Google
+      </ion-badge>
+    </div>
+
+    
+    <ion-note *ngIf="isGoogleUser" color="medium" class="google-note">
+      <ion-icon name="information-circle"></ion-icon>
+      {{ getGoogleUserMessage() }}
+    </ion-note>
+
+    
+    <ion-spinner *ngIf="isLoading" class="center-spinner"></ion-spinner>
+
+    
+    <form [formGroup]="profileForm" *ngIf="!isLoading">
+      <ion-item>
+        <ion-label position="stacked">Nombre</ion-label>
+        <ion-input formControlName="name" type="text" [disabled]="isGoogleUser"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Apellido</ion-label>
+        <ion-input formControlName="lastName" type="text"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Email</ion-label>
+        <ion-input formControlName="email" type="email"></ion-input>
+      </ion-item>
+
+      
+      <div class="action-buttons">
+        
+        <div *ngIf="!isEditing && !isGoogleUser" class="button-with-icon">
+          <ion-icon name="create-outline" slot="start"></ion-icon>
+          <app-button 
+            value="Editar Perfil" 
+            fill="solid" 
+            (click)="toggleEdit()">
+          </app-button>
+        </div>
+
+        <div *ngIf="isEditing" class="edit-buttons">
+          
+          <div class="button-with-icon">
+            <ion-icon name="save-outline" slot="start"></ion-icon>
+            <app-button 
+              value="Guardar Cambios" 
+              fill="solid" 
+              color="secondary"
+              [disabled]="profileForm.invalid"
+              (click)="updateProfile()">
+            </app-button>
+          </div>
+
+          
+          <div class="button-with-icon">
+            <ion-icon name="close-outline" slot="start"></ion-icon>
+            <app-button 
+              value="Cancelar" 
+              fill="outline" 
+              color="secondary"
+              (click)="toggleEdit()">
+            </app-button>
+          </div>
+        </div>
+
+     <!-- //cambiar contraseña
+        <div class="button-with-icon change-password-btn">
+          <ion-icon name="key-outline" slot="start"></ion-icon>
+          <app-button 
+            value="Cambiar Contraseña" 
+            fill="solid" 
+            color="warning"
+            (click)="changePassword()">
+          </app-button>
+        </div> -->
+      </div>
+    </form>
+  </div>
 </ion-content>
