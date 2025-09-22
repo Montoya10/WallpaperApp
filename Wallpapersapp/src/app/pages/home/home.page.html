@@ -1,21 +1,27 @@
 <ion-content [fullscreen]="true">
   <ion-card>
+    <ion-card-header>
+      <ion-card-title>Galería de Wallpapers</ion-card-title>
+      <ion-card-subtitle>
+        {{ imageUrls.length }} imagen(es) subida(s)
+      </ion-card-subtitle>
+    </ion-card-header>
     <ion-card-content>
-      <ion-grid>
-        <ion-row>
-          <ion-col>
-
-          </ion-col>
-        </ion-row>
-      </ion-grid>
+      <app-image-grid 
+        [imageUrls]="imageUrls" 
+        [isLoading]="isLoading"
+        (imageRemoved)="onImageRemoved($event)">
+      </app-image-grid>
     </ion-card-content>
   </ion-card>
-   <app-add-button
+
+  <app-add-button
     [showLogout]="true"
     [showAdd]="true"
     [showUpdateUser]="true"
     (onLogout)="doLogout()"
     (onAdd)="agregar()"
-    (onUpdateUser)="navigateToUpdateUser()">
+    (onUpdateUser)="navigateToUpdateUser()"
+  >
   </app-add-button>
 </ion-content>

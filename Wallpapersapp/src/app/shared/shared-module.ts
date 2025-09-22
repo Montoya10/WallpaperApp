@@ -11,6 +11,8 @@ import { LinkComponent } from './components/link/link.component';
 import { AddButtonComponent } from './components/addbutton/addbutton.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { BackButtonComponent } from './components/back-button/back-button.component';
+import { ImageGridComponent } from './components/ImageGrid/image-grid/image-grid.component';
+
 
 
 @NgModule({
@@ -22,6 +24,7 @@ import { BackButtonComponent } from './components/back-button/back-button.compon
     LinkComponent,
     AddButtonComponent,
     BackButtonComponent,
+    ImageGridComponent,
   ],
   imports: [CommonModule, IonicModule, ReactiveFormsModule],
   exports: [
@@ -32,6 +35,7 @@ import { BackButtonComponent } from './components/back-button/back-button.compon
     LinkComponent,
     AddButtonComponent,
     BackButtonComponent,
+    ImageGridComponent
   ],
 })
 export class SharedModule {}

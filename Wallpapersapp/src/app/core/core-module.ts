@@ -7,6 +7,13 @@ import { environment } from 'src/environments/environment.prod';
 import { ErrorHandler } from './services/error-handler/error-handler';
 import {provideFirestore, getFirestore} from '@angular/fire/firestore'
 import { Auth } from './services/auth/auth';
+import { Filepicker } from './providers/filepicker/filepicker';
+import { Capacitor } from '@capacitor/core';
+import { Uploader } from './providers/uploader/uploader';
+
+const providers =[Filepicker, Uploader]
+
+
 
 @NgModule({
   declarations: [],
@@ -14,9 +21,21 @@ import { Auth } from './services/auth/auth';
   providers: [
     provideFirebaseApp(() => initializeApp(environment.FIREBASE_APP)),
     provideAuth(() => getAuth()),
-    provideFirestore(()=>getFirestore()), 
+    provideFirestore(()=>getFirestore()), [Filepicker],
     Auth, Query,
     ErrorHandler,
   ],
 })
-export class CoreModule {}
+export class CoreModule {
+  constructor(private readonly fileSrv: Filepicker){
+    this.ngOnInit();
+  }
+
+  async ngOnInit() {
+    if(Capacitor.isNativePlatform ()){
+
+      await this.fileSrv.requestPermissions();
+
+    }
+  }
+}
