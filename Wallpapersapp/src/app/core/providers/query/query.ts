@@ -7,8 +7,14 @@ import {
   doc, 
   setDoc, 
   updateDoc, 
-  getDoc 
+  getDoc, 
+  deleteDoc, 
+  query, 
+  where, 
+  getDocs 
 } from '@angular/fire/firestore';
+ 
+
 
 @Injectable({
   providedIn: 'root'
@@ -22,6 +28,20 @@ export class Query {
       await setDoc(doc(collect, uuid), data );
     } catch (error) {
       console.log((error as any).message); 
+    }
+  }
+
+  /**
+   * Agrega un documento con id autogenerado
+   */
+  async add(collectionName: string, data: any) {
+    try {
+      const collect = collection(this.fs, collectionName);
+      const ref = await addDoc(collect, data);
+      return ref.id;
+    } catch (error) {
+      console.log((error as any).message);
+      throw error;
     }
   }
 
@@ -47,6 +67,33 @@ export class Query {
       } else {
         throw new Error('Documento no encontrado');
       }
+    } catch (error) {
+      console.log((error as any).message);
+      throw error;
+    }
+  }
+
+  /**
+   * Lista documentos filtrando por un campo
+   */
+  async listByField(collectionName: string, field: string, value: any) {
+    try {
+      const collect = collection(this.fs, collectionName);
+      const q = query(collect, where(field, '==', value));
+      const snap = await getDocs(q);
+      return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    } catch (error) {
+      console.log((error as any).message);
+      throw error;
+    }
+  }
+  /**
+   * Elimina un documento por ID
+   */
+  async delete(collectionName: string, uuid: string) {
+    try {
+      const docRef = doc(this.fs, collectionName, uuid);
+      await deleteDoc(docRef);
     } catch (error) {
       console.log((error as any).message);
       throw error;

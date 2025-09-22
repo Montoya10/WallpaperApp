@@ -9,13 +9,13 @@ import { IonGrid, IonRow, IonCol, IonSpinner, IonButton, IonIcon } from '@ionic/
   
 })
 export class ImageGridComponent {
-  @Input() imageUrls: string[] = [];
+  @Input() imageUrls: any[] = [];
   @Input() isLoading: boolean = false;
-  @Output() imageRemoved = new EventEmitter<number>();
+  @Output() imageRemoved = new EventEmitter<any>();
 
   constructor() {}
 
-  removeImage(index: number) {
-    this.imageRemoved.emit(index);
+  removeImage(image: any) {
+    this.imageRemoved.emit(image);
   }
 }

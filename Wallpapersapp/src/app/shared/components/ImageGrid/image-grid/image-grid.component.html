@@ -23,16 +23,16 @@
 
     
     @if (imageUrls.length > 0) {
-      @for (url of imageUrls; track url; let i = $index) {
+      @for (image of imageUrls; track image.id; let i = $index) {
         <ion-col size="6">
           <div class="image-card">
-            <img [src]="url" alt="Wallpaper" class="grid-image" />
+            <img [src]="image.url" alt="Wallpaper" class="grid-image" />
             <div class="image-overlay">
               <ion-button 
                 fill="clear" 
                 color="light" 
                 size="small"
-                (click)="removeImage(i)"
+                (click)="removeImage(image)"
               >
                 <ion-icon name="close" slot="icon-only"></ion-icon>
               </ion-button>

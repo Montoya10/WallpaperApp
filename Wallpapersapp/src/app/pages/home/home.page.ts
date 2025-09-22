@@ -12,7 +12,7 @@ import { Wallpaper } from 'src/app/shared/services/wallpaper/wallpaper';
   standalone: false,
 })
 export class HomePage {
-  public imageUrls: string[] = []; // Esta variable almacenará la URL de la imagen
+  public wallpapers: any[] = [];
   public isLoading: boolean = false;
 
   constructor(
@@ -23,7 +23,17 @@ export class HomePage {
     private readonly wallpaperSrv: Wallpaper
   ) {}
 
-  ngOnInit() {}
+  async ngOnInit() {
+    // Cargar wallpapers existentes del usuario
+    try {
+      this.isLoading = true;
+      this.wallpapers = await this.wallpaperSrv.loadUserWallpapers();
+    } catch (e) {
+      console.error('Error cargando wallpapers del usuario', e);
+    } finally {
+      this.isLoading = false;
+    }
+  }
 
   async doLogout() {
     console.log('Logout clicked');
@@ -36,8 +46,8 @@ export class HomePage {
     this.isLoading = true;
 
     try {
-      const url = await this.wallpaperSrv.uploadWallpaper();
-      this.imageUrls = [...this.imageUrls, url];
+      await this.wallpaperSrv.uploadWallpaper();
+      this.wallpapers = await this.wallpaperSrv.loadUserWallpapers();
       console.log('Wallpaper subido exitosamente');
       this.showToast('✅ Wallpaper agregado');
     } catch (error) {
@@ -48,9 +58,15 @@ export class HomePage {
     }
   }
 
-  public onImageRemoved(index: number) {
-    this.imageUrls = this.imageUrls.filter((_, i) => i !== index);
-    this.showToast('🗑️ Wallpaper eliminado');
+  public async onWallpaperRemoved(docId: string, fileName: string) {
+    try {
+      await this.wallpaperSrv.deleteWallpaper(docId, fileName);
+      this.wallpapers = await this.wallpaperSrv.loadUserWallpapers();
+      this.showToast('🗑️ Wallpaper eliminado');
+    } catch (error) {
+      this.showToast('❌ Error al eliminar el wallpaper');
+      console.error(error);
+    }
   }
 
   private async showToast(message: string) {
