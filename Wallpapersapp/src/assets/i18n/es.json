@@ -1,0 +1,11 @@
+{
+  "HOME": {
+    "TITLE": "Bienvenido",
+    "DESCRIPTION": "Esta es tu aplicación de fondos de pantalla."
+  },
+  "LOGIN": {
+    "USERNAME": "Usuario",
+    "PASSWORD": "Contraseña",
+    "BUTTON": "Iniciar sesión"
+  }
+}

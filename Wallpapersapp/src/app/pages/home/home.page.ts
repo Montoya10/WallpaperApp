@@ -4,6 +4,7 @@ import { Filepicker } from 'src/app/core/providers/filepicker/filepicker';
 import { Uploader } from 'src/app/core/providers/uploader/uploader';
 import { Auth } from 'src/app/core/services/auth/auth';
 import { Wallpaper } from 'src/app/shared/services/wallpaper/wallpaper';
+import { TranslationService } from 'src/app/core/services/translation/translation.service';
 
 @Component({
   selector: 'app-home',
@@ -20,8 +21,13 @@ export class HomePage {
     private readonly router: Router,
     private readonly fileSrv: Filepicker,
     private readonly uplouderSrv: Uploader,
-    private readonly wallpaperSrv: Wallpaper
+    private readonly wallpaperSrv: Wallpaper,
+    public translationService: TranslationService
   ) {}
+
+  changeLang(lang: string) {
+    this.translationService.useLanguage(lang);
+  }
 
   async ngOnInit() {
     // Cargar wallpapers existentes del usuario

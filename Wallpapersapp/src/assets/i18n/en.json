@@ -1,0 +1,11 @@
+{
+  "HOME": {
+    "TITLE": "Welcome",
+    "DESCRIPTION": "This is your wallpaper app."
+  },
+  "LOGIN": {
+    "USERNAME": "Username",
+    "PASSWORD": "Password",
+    "BUTTON": "Login"
+  }
+}
