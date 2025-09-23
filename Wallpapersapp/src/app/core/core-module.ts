@@ -10,6 +10,7 @@ import { Auth } from './services/auth/auth';
 import { Filepicker } from './providers/filepicker/filepicker';
 import { Capacitor } from '@capacitor/core';
 import { Uploader } from './providers/uploader/uploader';
+import { TranslateModule } from '@ngx-translate/core';
 
 const providers =[Filepicker, Uploader]
 
@@ -17,7 +18,8 @@ const providers =[Filepicker, Uploader]
 
 @NgModule({
   declarations: [],
-  imports: [CommonModule],
+  imports: [CommonModule,TranslateModule,],
+  exports: [TranslateModule,],
   providers: [
     provideFirebaseApp(() => initializeApp(environment.FIREBASE_APP)),
     provideAuth(() => getAuth()),
@@ -25,7 +27,8 @@ const providers =[Filepicker, Uploader]
     Auth, Query,
     ErrorHandler,
   ],
-})
+}
+)
 export class CoreModule {
   constructor(private readonly fileSrv: Filepicker){
     this.ngOnInit();

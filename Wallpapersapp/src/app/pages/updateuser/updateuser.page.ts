@@ -5,6 +5,8 @@ import { Auth } from 'src/app/core/services/auth/auth';
 import { ErrorHandler } from 'src/app/core/services/error-handler/error-handler';
 import { Query } from 'src/app/core/providers/query/query';
 import { Subscription } from 'rxjs';
+import { TranslationService } from 'src/app/core/services/translation/translation';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-updateuser',
@@ -20,8 +22,9 @@ export class UpdateuserPage implements OnInit, OnDestroy {
   public isLoading: boolean = false;
   public isEditing: boolean = false;
   public fullName: string = 'Mi Perfil';
-  public isGoogleUser: boolean = false; 
-  public userPhoto: string = ''; 
+  public isGoogleUser: boolean = false;
+  public userPhoto: string = '';
+  public currentLang: string = 'en';
 
   private userData: any = {};
   private authSubscription!: Subscription;
@@ -30,12 +33,15 @@ export class UpdateuserPage implements OnInit, OnDestroy {
     private readonly authSrv: Auth,
     private readonly querySrv: Query,
     private router: Router,
-    private errorHandler: ErrorHandler
+    private errorHandler: ErrorHandler,
+    private translationService: TranslationService,
+    private translate: TranslateService
   ) {
     this.initForm();
   }
 
   async ngOnInit() {
+    this.currentLang = this.translationService.getCurrentLang();
     await this.loadUserData();
   }
 
@@ -45,13 +51,22 @@ export class UpdateuserPage implements OnInit, OnDestroy {
     }
   }
 
+  changeLang(lang: string) {
+    this.currentLang = lang;
+    this.translationService.changeLang(lang);
+  }
+
   private async loadUserData() {
     this.isLoading = true;
     const userId = this.authSrv.currentUserId;
     const currentUser = this.authSrv.currentUser;
 
     if (!userId || !currentUser) {
-      this.errorHandler.showWarning('Usuario no autenticado');
+      this.translate
+        .get('PROFILE.UNAUTHENTICATED')
+        .subscribe((message: string) => {
+          this.errorHandler.showWarning(message);
+        });
       this.router.navigate(['/login']);
       return;
     }
@@ -59,10 +74,8 @@ export class UpdateuserPage implements OnInit, OnDestroy {
     try {
       this.userData = await this.querySrv.get('users', userId);
 
-      
       this.isGoogleUser = this.checkIfGoogleUser(currentUser);
 
-      
       this.userPhoto = this.userData?.photoURL || currentUser.photoURL || '';
 
       if (this.userData) {
@@ -73,25 +86,24 @@ export class UpdateuserPage implements OnInit, OnDestroy {
         });
 
         this.fullName =
-          `${this.userData.name || currentUser.displayName || ''} ${this.userData.last || ''}`.trim() ||
-          'Mi Perfil';
-        
+          `${this.userData.name || currentUser.displayName || ''} ${
+            this.userData.last || ''
+          }`.trim() || this.translate.instant('PROFILE.MY_PROFILE');
+
         this.email.disable();
-        
-        // Deshabilitar nombre si es usuario de Google
+
         if (this.isGoogleUser) {
           this.name.disable();
         }
       } else {
-        // Si no hay datos en Firestore, usar datos de Auth
         this.profileForm.patchValue({
           name: currentUser.displayName || '',
           lastName: '',
-          email: currentUser.email || ''
+          email: currentUser.email || '',
         });
-        
-        this.fullName = currentUser.displayName || 'Mi Perfil';
-        
+
+        this.fullName = currentUser.displayName ||  this.translate.instant('PROFILE.MY_PROFILE');
+
         if (this.isGoogleUser) {
           this.name.disable();
         }
@@ -103,24 +115,26 @@ export class UpdateuserPage implements OnInit, OnDestroy {
     }
   }
 
-  
   private checkIfGoogleUser(user: any): boolean {
-    return user.providerData && user.providerData.some(
-      (provider: any) => provider.providerId === 'google.com'
+    return (
+      user.providerData &&
+      user.providerData.some(
+        (provider: any) => provider.providerId === 'google.com'
+      )
     );
   }
 
-  
   public getGoogleUserMessage(): string {
-    return this.isGoogleUser 
-      ? 'Tu perfil está vinculado con Google. Algunos datos no pueden ser editados aquí.' 
+    return this.isGoogleUser
+      ? 'Tu perfil está vinculado con Google. Algunos datos no pueden ser editados aquí.'
       : '';
   }
 
-  public toggleEdit() {
-  
+ public toggleEdit() {
     if (this.isGoogleUser) {
-      this.errorHandler.showInfo('Para usuarios de Google, actualiza tu información directamente en tu cuenta de Google');
+      this.translate.get('PROFILE.GOOGLE_USER_MESSAGE').subscribe((message: string) => {
+        this.errorHandler.showInfo(message);
+      });
       return;
     }
 
@@ -142,9 +156,9 @@ export class UpdateuserPage implements OnInit, OnDestroy {
 
   public async updateProfile() {
     if (this.profileForm.invalid) {
-      this.errorHandler.showWarning(
-        'Por favor, completa todos los campos correctamente'
-      );
+      this.translate.get('COMMON.REQUIRED_FIELD').subscribe((message: string) => {
+        this.errorHandler.showWarning(message);
+      });
       return;
     }
 
@@ -152,7 +166,9 @@ export class UpdateuserPage implements OnInit, OnDestroy {
     const userId = this.authSrv.currentUserId;
 
     if (!userId) {
-      this.errorHandler.showWarning('Usuario no autenticado');
+      this.translate.get('PROFILE.UNAUTHENTICATED').subscribe((message: string) => {
+        this.errorHandler.showWarning(message);
+      });
       this.isLoading = false;
       return;
     }
@@ -169,7 +185,9 @@ export class UpdateuserPage implements OnInit, OnDestroy {
       this.userData = { ...this.userData, ...updateData };
       this.fullName = `${this.name.value} ${this.lastName.value}`.trim();
 
-      this.errorHandler.showSuccess('Perfil actualizado correctamente');
+      this.translate.get('PROFILE.UPDATE_SUCCESS').subscribe((message: string) => {
+        this.errorHandler.showSuccess(message);
+      });
       this.isEditing = false;
       this.name.disable();
       this.lastName.disable();
@@ -182,13 +200,15 @@ export class UpdateuserPage implements OnInit, OnDestroy {
 
   public async changePassword() {
     if (this.isGoogleUser) {
-      this.errorHandler.showInfo('Los usuarios de Google deben cambiar su contraseña desde su cuenta de Google');
+      this.translate.get('PROFILE.GOOGLE_USER_MESSAGE').subscribe((message: string) => {
+        this.errorHandler.showInfo(message);
+      });
       return;
     }
     
-    this.errorHandler.showInfo(
-      'Funcionalidad de cambio de contraseña próximamente'
-    );
+    this.translate.get('PROFILE.PASSWORD_FEATURE').subscribe((message: string) => {
+      this.errorHandler.showInfo(message);
+    });
   }
 
   public async logout() {

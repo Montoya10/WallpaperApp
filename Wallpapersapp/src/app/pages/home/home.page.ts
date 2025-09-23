@@ -4,7 +4,8 @@ import { Filepicker } from 'src/app/core/providers/filepicker/filepicker';
 import { Uploader } from 'src/app/core/providers/uploader/uploader';
 import { Auth } from 'src/app/core/services/auth/auth';
 import { Wallpaper } from 'src/app/shared/services/wallpaper/wallpaper';
-import { TranslationService } from 'src/app/core/services/translation/translation.service';
+import { TranslationService } from 'src/app/core/services/translation/translation';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-home',
@@ -15,6 +16,7 @@ import { TranslationService } from 'src/app/core/services/translation/translatio
 export class HomePage {
   public wallpapers: any[] = [];
   public isLoading: boolean = false;
+   public currentLang: string = 'en';
 
   constructor(
     private readonly authSrv: Auth,
@@ -22,18 +24,25 @@ export class HomePage {
     private readonly fileSrv: Filepicker,
     private readonly uplouderSrv: Uploader,
     private readonly wallpaperSrv: Wallpaper,
-    public translationService: TranslationService
+    private translationService: TranslationService,
+    private translate: TranslateService
   ) {}
 
   changeLang(lang: string) {
-    this.translationService.useLanguage(lang);
+    console.log('Change language to:', lang);
+    this.currentLang = lang;
+    this.translationService.changeLang(lang);
+
+    this.translate.use(lang);
+    
   }
 
   async ngOnInit() {
-    // Cargar wallpapers existentes del usuario
     try {
       this.isLoading = true;
       this.wallpapers = await this.wallpaperSrv.loadUserWallpapers();
+      this.currentLang =
+        this.translate.currentLang || this.translate.defaultLang || 'en';
     } catch (e) {
       console.error('Error cargando wallpapers del usuario', e);
     } finally {

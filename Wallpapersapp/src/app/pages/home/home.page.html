@@ -1,10 +1,13 @@
 <ion-header>
   <ion-toolbar color="primary">
-    <ion-title>
-      {{ 'HOME.TITLE' | translate }}
-    </ion-title>
+    <ion-title> {{ 'HOME.TITLE' | translate }} </ion-title>
     <ion-buttons slot="end">
-      <ion-select interface="popover" placeholder="Lang" (ionChange)="changeLang($event.detail.value)">
+      <ion-select
+        interface="popover"
+        [placeholder]="'HOME.LANGUAGE' | translate"
+        [value]="currentLang"
+        (ionChange)="changeLang($event.detail.value)"
+      >
         <ion-select-option value="en">EN</ion-select-option>
         <ion-select-option value="es">ES</ion-select-option>
       </ion-select>
@@ -15,11 +18,28 @@
 <ion-content [fullscreen]="true">
   <ion-card>
     <ion-card-header>
-      <ion-card-title>{{ 'HOME.TITLE' | translate }}</ion-card-title>
+      <ion-card-title>{{ 'HOME.GALLERY_TITLE' | translate }}</ion-card-title>
       <ion-card-subtitle>
-        {{ 'HOME.DESCRIPTION' | translate }}
+        {{ wallpapers.length }} {{ 'HOME.IMAGES_UPLOADED' | translate }}
       </ion-card-subtitle>
     </ion-card-header>
     <ion-card-content>
+      <app-image-grid
+        [imageUrls]="wallpapers"
+        [isLoading]="isLoading"
+        (imageRemoved)="onWallpaperRemoved($event.id, $event.fileName)"
+      >
+      </app-image-grid>
+    </ion-card-content>
+  </ion-card>
 
-
+  <app-add-button
+    [showLogout]="true"
+    [showAdd]="true"
+    [showUpdateUser]="true"
+    (onLogout)="doLogout()"
+    (onAdd)="agregar()"
+    (onUpdateUser)="navigateToUpdateUser()"
+  >
+  </app-add-button>
+</ion-content>

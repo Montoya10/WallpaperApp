@@ -1,4 +1,23 @@
-<ion-radio-group value="languajes">
-  <ion-radio value="es">es</ion-radio>
-  <ion-radio value="en">en</ion-radio> 
-</ion-radio-group>
+<ion-item>
+  <ion-label position="stacked">{{ label | translate }}</ion-label>
+  <ion-radio-group 
+    [value]="value" 
+    (ionChange)="onValueChange($event)"
+    class="radio-group {{ getJustifyClass() }}">
+    
+    <ion-grid>
+      <ion-row>
+        @for (option of options; track option.value) {
+          <ion-col size="auto">
+            <ion-item lines="none">
+              <ion-radio [value]="option.value">
+                {{ option.label | translate }}
+              </ion-radio>
+            </ion-item>
+          </ion-col>
+        }
+      </ion-row>
+    </ion-grid>
+
+  </ion-radio-group>
+</ion-item>

@@ -4,6 +4,8 @@ import { Router } from '@angular/router';
 import { Query } from 'src/app/core/providers/query/query';
 import { Auth } from 'src/app/core/services/auth/auth';
 import { ErrorHandler } from 'src/app/core/services/error-handler/error-handler';
+import { TranslationService } from 'src/app/core/services/translation/translation';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-login',
@@ -16,17 +18,27 @@ export class LoginPage implements OnInit {
   public password!: FormControl;
   public loginForm!: FormGroup;
   public isLoading: boolean = false;
+  public currentLang: string = 'en';
 
   constructor(
     private readonly router: Router,
     private readonly authSrv: Auth,
     private errorHandler: ErrorHandler,
     private readonly querySrv: Query,
+    private translationService: TranslationService,
+    private translate: TranslateService
   ) {
     this.initForm();
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+      this.currentLang = this.translationService.getCurrentLang();
+  }
+
+changeLang(lang: string) {
+    this.currentLang = lang;
+    this.translationService.changeLang(lang);
+  }
 
   public goToRegister() {
     this.router.navigate(['/register']);
@@ -34,13 +46,17 @@ export class LoginPage implements OnInit {
 
   public async doLogin() {
     if (this.loginForm.invalid) {
-      this.errorHandler.showWarning('Por favor, completa todos los campos correctamente');
+     this.translate.get('COMMON.REQUIRED_FIELD').subscribe((message: string) => {
+        this.errorHandler.showWarning(message);
+      });
       return;
     }
     this.isLoading = true;
     try {
       await this.authSrv.login(this.email.value, this.password.value);
-      this.errorHandler.showSuccess('¡Bienvenido! Sesión iniciada correctamente');
+      this.errorHandler.showSuccess(
+        '¡Bienvenido! Sesión iniciada correctamente'
+      );
       this.router.navigate(['/home']);
     } catch (error) {
       this.errorHandler.handleFirebaseError(error, 'login');
@@ -51,10 +67,12 @@ export class LoginPage implements OnInit {
 
   public async doLoginWithGoogle() {
     this.isLoading = true;
-    
+
     try {
       await this.authSrv.loginWithGoogle();
-      this.errorHandler.showSuccess('¡Bienvenido! Sesión con Google iniciada correctamente');
+      this.errorHandler.showSuccess(
+        '¡Bienvenido! Sesión con Google iniciada correctamente'
+      );
       this.router.navigate(['/home']);
     } catch (error) {
       this.errorHandler.handleFirebaseError(error, 'google');
