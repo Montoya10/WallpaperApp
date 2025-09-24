@@ -28,14 +28,6 @@ export class HomePage {
     private translate: TranslateService
   ) {}
 
-  changeLang(lang: string) {
-    console.log('Change language to:', lang);
-    this.currentLang = lang;
-    this.translationService.changeLang(lang);
-
-    this.translate.use(lang);
-    
-  }
 
   async ngOnInit() {
     try {
